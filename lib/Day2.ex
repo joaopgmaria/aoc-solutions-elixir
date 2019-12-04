@@ -8,6 +8,12 @@ defmodule Day2 do
       |> compute()
   end
 
+  def part2() do
+    get_input()
+      |> get_program()
+      |> get_params(19690720)
+  end
+
   defp get_program(input) do
     input
       |> String.split(",", trim: true)
@@ -42,5 +48,23 @@ defmodule Day2 do
   defp replace(lst, idx, val) do
     {left, [_|right]} = Enum.split(lst, idx)
     left ++ [val|right]
+  end
+
+  def get_params(program, expected) do
+    try do
+      for noun <- 1..99,
+          verb <- 1..99 do
+        program = replace(program, 1, noun)
+        program = replace(program, 2, verb)
+
+        case compute(program) do
+          [actual|_] when actual == expected ->
+            throw({:noun, noun, :verb, verb, :result, actual})
+          _ -> :noop
+        end
+      end
+    catch
+      x -> x
+    end
   end
 end
