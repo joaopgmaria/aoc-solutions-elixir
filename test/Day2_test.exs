@@ -4,6 +4,6 @@ defmodule Day2Test do
 
   @tag day: 2
   test "greets the world" do
-    assert Day1.hello() == :world
+    assert Day2.hello() == :world
   end
 end
