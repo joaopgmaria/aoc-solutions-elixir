@@ -52,6 +52,8 @@ Once you have a working computer, the first step is to restore the gravity assis
 
 > Your puzzle answer was `3101878`.
 
+---
+
 ## Part Two
 
 _"Good, the new computer seems to be working correctly! Keep it nearby during this mission - you'll probably use it again. Real Intcode computers support many more features than your new one, but we'll let you know what they are as you need them."_
