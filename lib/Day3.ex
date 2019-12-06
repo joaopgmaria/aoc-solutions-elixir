@@ -7,11 +7,25 @@ defmodule Day3 do
       |> get_smallest_intersection_distance()
   end
 
+  def part2() do
+    get_input()
+      |> get_smallest_intersection_steps()
+  end
+
   def get_smallest_intersection_distance(input) do
     input
       |> get_wires_paths()
       |> get_intersections()
       |> Enum.map(&get_taxicab_distance/1)
+      |> Enum.sort()
+      |> hd()
+  end
+
+  def get_smallest_intersection_steps(input) do
+    paths = input |> get_wires_paths()
+    intersections = paths |> get_intersections()
+
+    count_steps_to_intersections(paths, intersections)
       |> Enum.sort()
       |> hd()
   end
@@ -60,6 +74,19 @@ defmodule Day3 do
 
   def get_taxicab_distance({xa, ya}, {xb, yb} \\ {0, 0}) do
     abs(xa - xb) + abs(ya - yb)
+  end
+
+  def count_steps_to_intersections([red, green], intersections) do
+    red = red |> Enum.with_index()
+    green = green |> Enum.with_index()
+
+    intersections
+      |> Enum.map(fn i ->
+        [{_, r}|_] = Enum.filter(red, fn {p, _} -> p == i end)
+        [{_, g}|_] = Enum.filter(green, fn {p, _} -> p == i end)
+
+        (r+1) + (g+1)
+      end)
   end
 
 end
