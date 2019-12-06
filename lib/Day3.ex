@@ -77,13 +77,10 @@ defmodule Day3 do
   end
 
   def count_steps_to_intersections([red, green], intersections) do
-    red = red |> Enum.with_index()
-    green = green |> Enum.with_index()
-
     intersections
       |> Enum.map(fn i ->
-        [{_, r}|_] = Enum.filter(red, fn {p, _} -> p == i end)
-        [{_, g}|_] = Enum.filter(green, fn {p, _} -> p == i end)
+        r = Enum.find_index(red, fn p-> p == i end)
+        g = Enum.find_index(green, fn p -> p == i end)
 
         (r+1) + (g+1)
       end)
