@@ -1,17 +1,17 @@
-defmodule Day3New do
+defmodule Day3 do
   @input "priv/inputs/day3.txt"
   def get_input(), do: File.read!(@input)
 
   def part1() do
     get_input()
-      |> get_wires_paths()
-      |> get_intersections()
       |> get_smallest_intersection_distance()
   end
 
-  def get_smallest_intersection_distance(intersections) do
-    intersections
-      |> Enum.map(&get_distance/1)
+  def get_smallest_intersection_distance(input) do
+    input
+      |> get_wires_paths()
+      |> get_intersections()
+      |> Enum.map(&get_taxicab_distance/1)
       |> Enum.sort()
       |> hd()
   end
@@ -58,7 +58,7 @@ defmodule Day3New do
     get_path(tail, path)
   end
 
-  def get_distance({xa, ya}, {xb, yb} \\ {0, 0}) do
+  def get_taxicab_distance({xa, ya}, {xb, yb} \\ {0, 0}) do
     abs(xa - xb) + abs(ya - yb)
   end
 
