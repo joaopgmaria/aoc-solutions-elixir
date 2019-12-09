@@ -9,6 +9,12 @@ defmodule Day5 do
       |> compute()
   end
 
+  def test(input) do
+    input
+    |> get_program()
+    |> compute()
+  end
+
   defp get_program(input) do
     input
       |> String.split(",", trim: true)
@@ -66,6 +72,48 @@ defmodule Day5 do
     {:ok, program, ip + 2}
   end
 
+  def execute_instruction(5, [p1,p2|_], {m1,m2,_}, program, ip) do
+    new_ip = case get_param(program, p1, m1) do
+      val when val != 0 -> get_param(program, p2, m2)
+      _ -> ip+3
+    end
+
+    {:ok, program, new_ip}
+  end
+
+  def execute_instruction(6, [p1,p2|_], {m1,m2,_}, program, ip) do
+    new_ip = case get_param(program, p1, m1) do
+      val when val == 0 -> get_param(program, p2, m2)
+      _ -> ip+3
+    end
+
+    {:ok, program, new_ip}
+  end
+
+  def execute_instruction(7, [p1,p2,p3|_], {m1,m2,_}, program, ip) do
+    v1 = get_param(program, p1, m1)
+    v2 = get_param(program, p2, m2)
+
+    updated = case v1 < v2 do
+      true -> replace(program, p3, 1)
+      false -> replace(program, p3, 0)
+    end
+
+    {:ok, updated, ip + 4}
+  end
+
+  def execute_instruction(8, [p1,p2,p3|_], {m1,m2,_}, program, ip) do
+    v1 = get_param(program, p1, m1)
+    v2 = get_param(program, p2, m2)
+
+    updated = case v1 == v2 do
+      true -> replace(program, p3, 1)
+      false -> replace(program, p3, 0)
+    end
+
+    {:ok, updated, ip + 4}
+  end
+
   def execute_instruction(99, _, _, program, ip) do
     {:stop, program, ip}
   end
@@ -75,10 +123,10 @@ defmodule Day5 do
     left ++ [val|right]
   end
 
-  defp get_param(program, idx, 0), do: Enum.at(program, idx)
-  defp get_param(_, val, 1), do: val
+  def get_param(program, idx, 0), do: Enum.at(program, idx)
+  def get_param(_, val, 1), do: val
 
-  defp parse_modes(opcode) do
+  def parse_modes(opcode) do
     m3 = div(opcode, 10000)
     r3 = rem(opcode, 10000)
 
