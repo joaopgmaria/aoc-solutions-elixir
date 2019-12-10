@@ -3,19 +3,38 @@ defmodule Day6 do
   @input "priv/inputs/day6.txt"
   defp get_input(), do: File.read!(@input)
 
-  def part1() do
-    get_input()
+  def part1(input \\ nil) do
+    (input || get_input())
       |> parce_orbits()
       |> get_suborbits()
       |> Map.to_list()
       |> Enum.reduce(0, fn {_, lst}, acc -> acc + Enum.count(lst) end)
   end
 
+  def part2(input \\ nil) do
+    [{"SAN",san},{"YOU",you}] =
+      (input || get_input())
+        |> parce_orbits()
+        |> get_suborbits()
+        |> Map.to_list()
+        |> Enum.filter(fn {o, _} -> o == "SAN" or o == "YOU" end)
+
+    intersection = get_intersection(san, you)
+
+    {_,san} = Enum.split_while(san, & &1 != intersection)
+    {_,you} = Enum.split_while(you, & &1 != intersection)
+
+    Enum.count(san) + Enum.count(you) - 2
+  end
+
   defp parce_orbits(input) do
     input
       |> String.replace("\r", "")
       |> String.split("\n", trim: true)
-      |> Enum.map(fn <<a::binary()-size(3), ")", b::binary()-size(3)>> -> {a,b} end)
+      |> Enum.map(fn a ->
+        [a,b] = String.split(a, ")")
+        {a,b}
+      end)
   end
 
   def get_suborbits(map) do
@@ -48,4 +67,11 @@ defmodule Day6 do
     end
   end
 
+  def get_intersection([s,s2|_st], [y,y2|_yt]) when s == y and s2 != y2 do
+    s
+  end
+
+  def get_intersection([_|st], [_|yt]) do
+    get_intersection(st, yt)
+  end
 end
