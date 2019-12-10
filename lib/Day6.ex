@@ -32,8 +32,8 @@ defmodule Day6 do
       |> String.replace("\r", "")
       |> String.split("\n", trim: true)
       |> Enum.map(fn a ->
-        [a,b] = String.split(a, ")")
-        {a,b}
+          String.split(a, ")")
+          |> List.to_tuple()
       end)
   end
 
