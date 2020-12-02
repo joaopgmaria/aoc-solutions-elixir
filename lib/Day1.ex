@@ -1,33 +1,64 @@
 defmodule Day1 do
-
   @input "priv/inputs/day1.txt"
-  defp get_input(), do: File.read!(@input)
-
-  def part1() do
-    get_input()
-      |> get_masses()
-      |> Enum.reduce(0, fn mass, acc -> acc + get_fuel(mass) end)
+  def get_input(nil) do
+    File.read!(@input)
   end
 
-  def part2() do
-    get_input()
-      |> get_masses()
-      |> Enum.reduce(0, fn mass, acc -> acc + get_fuel_corrected(mass) end)
+  def get_input(str), do: str
+
+  def part1(input \\ "") do
+    get_input(input)
+    |> get_numbers()
+    |> get_tuples(2)
+    |> filter_sum(2020)
+    |> multiply()
   end
 
-  defp get_masses(input) do
+  def part2(input \\ "") do
+    get_input(input)
+    |> get_numbers()
+    |> get_tuples(3)
+    |> filter_sum(2020)
+    |> multiply()
+  end
+
+  def get_numbers(input) do
     input
-      |> String.replace("\r", "")
-      |> String.split("\n", trim: true)
-      |> Enum.map(&String.to_integer/1)
+    |> String.replace("\r", "")
+    |> String.split("\n", trim: true)
+    |> Enum.map(&String.to_integer/1)
   end
 
-  def get_fuel(mass), do: Kernel.trunc(mass/3)-2
+  def get_tuples(list, 2) do
+    for a <- list,
+        b <- list do
+      {a, b}
+    end
+  end
 
-  def get_fuel_corrected(mass, total \\ 0)
-  def get_fuel_corrected(mass, total) when mass <= 8, do: total
-  def get_fuel_corrected(mass, total) do
-    fuel = get_fuel(mass)
-    get_fuel_corrected(fuel, total+fuel)
+  def get_tuples(list, 3) do
+    for a <- list,
+        b <- list,
+        c <- list do
+      {a, b, c}
+    end
+  end
+
+  def filter_sum(list, res) do
+    Enum.filter(list, fn t ->
+      res ==
+        t
+        |> Tuple.to_list()
+        |> Enum.sum()
+    end)
+    |> hd()
+  end
+
+  def multiply(t) do
+    t
+    |> Tuple.to_list()
+    |> Enum.reduce(1, fn v, acc ->
+      acc * v
+    end)
   end
 end

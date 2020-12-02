@@ -1,19 +1,23 @@
-defmodule DTest do
+defmodule Day1.Test do
   use ExUnit.Case
-  doctest Day1
 
-  @tag day: 1
-  test "gets fuel" do
-    assert Day1.get_fuel(12) == 2
-    assert Day1.get_fuel(14) == 2
-    assert Day1.get_fuel(1969) == 654
-    assert Day1.get_fuel(100756) == 33583
+  setup do
+    input = "1721
+979
+366
+299
+675
+1456
+"
+
+    {:ok, input: input}
   end
 
-  @tag day: 1
-  test "gets (good) fuel" do
-    assert Day1.get_fuel_corrected(14) == 2
-    assert Day1.get_fuel_corrected(1969) == 966
-    assert Day1.get_fuel_corrected(100756) == 50346
+  test "succeeds for part1", %{input: input} do
+    assert 514_579 = Day1.part1(input)
+  end
+
+  test "succeeds for part2", %{input: input} do
+    assert 241_861_950 = Day1.part2(input)
   end
 end
